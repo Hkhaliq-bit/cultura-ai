@@ -1,5 +1,4 @@
 # app.py — Cultura AI (single-page, no sidebar, proxy-proof OpenAI client)
-
 import os
 from datetime import datetime
 from difflib import get_close_matches
