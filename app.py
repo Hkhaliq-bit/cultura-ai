@@ -173,7 +173,7 @@ def must_include_from_text(screening: str, chronic: str) -> list[str]:
 # ------------------ Header & Controls ------------------
 st.title("Cultura AI")
 st.markdown('<div class="subtitle">Global evidence. Local insight. Culturally aware.</div>', unsafe_allow_html=True)
-st.info("Decision support only; always apply clinical judgment and local/provincial guidance.")
+st.info("Decision support only - always apply clinical judgment and local/provincial guidance.")
 
 c1, c2, _ = st.columns([1, 1, 5])
 with c1:
