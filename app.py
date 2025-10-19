@@ -1,23 +1,4 @@
 # app.py — Cultura AI (single-page, no sidebar, proxy-proof OpenAI client)
-# ------------------ Landing Page / Splash Screen ------------------
-if "started" not in st.session_state:
-    st.session_state["started"] = False
-
-if not st.session_state["started"]:
-    st.markdown("<div style='text-align:center; margin-top:100px;'>", unsafe_allow_html=True)
-    if os.path.exists("logo.png"):
-        st.image("logo.png", width=220)
-    else:
-        st.markdown("<h1 style='font-size:60px;'>🌍</h1>", unsafe_allow_html=True)
-    st.markdown("<h1 style='font-size:45px; color:#0E6299;'>Cultura AI</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='color:#6B7280; font-size:18px;'>Culturally intelligent, evidence-based care for newcomers</p>", unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
-    
-    st.markdown("<br><br>", unsafe_allow_html=True)
-    if st.button("🚀 Enter", use_container_width=True):
-        st.session_state["started"] = True
-        st.rerun()
-    st.stop()
 
 import os
 from datetime import datetime
