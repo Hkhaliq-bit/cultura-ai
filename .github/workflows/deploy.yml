@@ -14,15 +14,21 @@ jobs:
       - name: SSH into server and deploy
         uses: appleboy/ssh-action@v1.2.0
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
+          host: ${{ secrets.SSH_HOST }}          # e.g. culturahealth.ca
+          username: ${{ secrets.SSH_USER }}      # deploy
+          key: ${{ secrets.SSH_KEY }}            # your private key
+          port: 22
+          script_stop: true
+          command_timeout: 20m
           script: |
-            set -e
+            set -euxo pipefail
             cd /opt/cultura-ai
             git fetch --all
             git reset --hard origin/main
-            /opt/cultura-ai/venv/bin/pip install --no-cache-dir -r requirements.txt || true
-            sudo /usr/bin/systemctl restart cultura
-            sudo /usr/bin/systemctl status --no-pager cultura
 
+            # Use the app's virtualenv for dependencies
+            /opt/cultura-ai/venv/bin/pip install --no-cache-dir -r requirements.txt
+
+            # Restart the systemd service without prompting for password
+            sudo -n /usr/bin/systemctl restart cultura
+            sudo -n /usr/bin/systemctl status --no-pager cultura
