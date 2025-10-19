@@ -66,7 +66,7 @@ if not st.session_state["started"]:
     Every day, primary care physicians meet patients whose health stories began elsewhere.  
     For newcomers and refugees, medical histories may be incomplete, vaccination records uncertain, and region-specific screening needs unclear.  
 
-    Yet, the relevant guidance — from CMAJ, Public Health Ontario, WHO, and refugee-health frameworks — is scattered across multiple sources.  
+    Yet, the relevant guidance - from CMAJ, Public Health Ontario, WHO, and refugee-health frameworks - is scattered across multiple sources.  
     For a busy clinician, finding and interpreting that information within a short appointment is nearly impossible.  
 
     The result is inconsistency, missed opportunities for prevention, and inequities in care that should no longer exist in a system striving for inclusivity.
@@ -99,17 +99,13 @@ if not st.session_state["started"]:
     
     **Dr. Haseeb Khaliq**  
     
-    Over the past decade, I have practiced family medicine across three very different healthcare systems —  
-    the NHS (UK), the Primary Health Care Corporation (Qatar), and now Ontario.  
-
-    In Qatar, I cared for patients from more than fifty nationalities.  
-    Each encounter taught me that culture, migration, language, and belief deeply influence how health is understood and experienced.  
-
-    Now at Restore Medical Clinics in Ottawa, I see the same truth every day:  
-    more than half of my patients are newcomers or refugees.  
+    Over the past decade, I have practiced family medicine across three very different healthcare systems - the NHS (UK), the Primary Health Care Corporation (Qatar), and now Ontario.  
+    In Qatar, I cared for patients from more than fifty nationalities. Each encounter taught me that culture, migration, language, and belief deeply influence how health is understood and experienced.  
+    Now at Restore Medical Clinics in Ottawa, I see the same truth every day: more than half of my patients are newcomers or refugees.  
+    
     The need for a trusted resource that connects global evidence to local practice became obvious.  
 
-    Cultura Health was born out of that need — a tool built from the front lines of family practice to make equitable care achievable, practical, and real for every clinician.  
+    Cultura Health was born out of that need - a tool built from the front lines of family practice to make equitable care achievable, practical, and real for every clinician.  
 
     This project is personal. It grew from years of listening to stories that medicine almost missed.
     """, unsafe_allow_html=True)
