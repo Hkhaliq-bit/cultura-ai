@@ -1,0 +1,28 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: SSH into server and deploy
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            set -e
+            cd /opt/cultura-ai
+            git fetch --all
+            git reset --hard origin/main
+            /opt/cultura-ai/venv/bin/pip install --no-cache-dir -r requirements.txt || true
+            sudo /usr/bin/systemctl restart cultura
+            sudo /usr/bin/systemctl status --no-pager cultura
+
