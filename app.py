@@ -95,11 +95,11 @@ if not st.session_state["started"]:
 
     ### Why This Matters
 
-    Every year, Canada welcomes more than half a million newcomers — each bringing unique health backgrounds, exposures, and needs. Yet studies from *CMAJ* and the Canadian Collaboration for Immigrant and Refugee Health (CCIRH) continue to highlight persistent gaps in screening, immunization, and chronic disease prevention for these populations. 
+    Every year, Canada welcomes more than half a million newcomers - each bringing unique health backgrounds, exposures, and needs. Yet studies from *CMAJ* and the Canadian Collaboration for Immigrant and Refugee Health (CCIRH) continue to highlight persistent gaps in screening, immunization, and chronic disease prevention for these populations. 
 
     A 2023 *BMC Family Practice* study found that over 70% of family physicians felt only somewhat confident identifying the appropriate screening and vaccination protocols for patients arriving from high-prevalence regions. Meanwhile, data from the Public Health Agency of Canada show that culturally adapted care models can improve patient engagement and follow-up by up to 40%.
 
-    Cultura Health was designed to close these gaps. It brings scattered, complex guidance into one place — transforming it into concise, evidence-based insights that clinicians can trust. By reducing variability in care, saving time, and enhancing confidence, Cultura Health helps physicians deliver medicine that is not only smarter, but also fairer and more human — ensuring every patient feels seen, understood, and cared for as a person, not just a diagnosis.
+    Cultura Health was designed to close these gaps. It brings scattered, complex guidance into one place - transforming it into concise, evidence-based insights that clinicians can trust. By reducing variability in care, saving time, and enhancing confidence, Cultura Health helps physicians deliver medicine that is not only smarter, but also fairer and more human - ensuring every patient feels seen, understood, and cared for as a person, not just a diagnosis.
 
     ---
     """, unsafe_allow_html=True)
