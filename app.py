@@ -46,14 +46,32 @@ if "started" not in st.session_state:
     st.session_state["started"] = False
 
 if not st.session_state["started"]:
-    st.markdown("<div style='text-align:center; margin-top:100px;'>", unsafe_allow_html=True)
+    st.markdown("""
+        <div style='
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 90vh;
+            text-align: center;
+        '>
+    """, unsafe_allow_html=True)
+
     if os.path.exists("logo.png"):
-        st.image("logo.png", width=220)
+        st.image("logo.png", width=260)
     else:
         st.markdown("<h1 style='font-size:60px;'>🌍</h1>", unsafe_allow_html=True)
-    st.markdown("<h1 style='font-size:45px; color:#0E6299;'>Cultura Health</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='color:#6B7280; font-size:18px;'>Culturally intelligent, evidence-based care for newcomers</p>", unsafe_allow_html=True)
+
+    st.markdown("<h1 style='font-size:46px; color:#0E6299; margin-top:20px;'>Cultura Health</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='color:#6B7280; font-size:18px; margin-bottom:40px;'>Culturally intelligent, evidence-based care for newcomers</p>", unsafe_allow_html=True)
+
+    if st.button("🚀 Enter", use_container_width=False):
+        st.session_state["started"] = True
+        st.rerun()
+
     st.markdown("</div>", unsafe_allow_html=True)
+    st.stop()
+
 
     st.markdown("<br><br>", unsafe_allow_html=True)
     if st.button("🚀 Enter", use_container_width=True):
