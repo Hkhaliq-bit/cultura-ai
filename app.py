@@ -42,6 +42,9 @@ st.markdown(
 )
 
 # ------------------ Landing Page / Splash Screen ------------------
+if "started" not in st.session_state:
+    st.session_state["started"] = False
+
 if not st.session_state["started"]:
     st.markdown("<div style='text-align:center; margin-top:100px;'>", unsafe_allow_html=True)
     if os.path.exists("logo.png"):
