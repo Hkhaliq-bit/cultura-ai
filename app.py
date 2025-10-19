@@ -46,21 +46,83 @@ if "started" not in st.session_state:
     st.session_state["started"] = False
 
 if not st.session_state["started"]:
-    st.markdown("<div style='text-align:center; margin-top:100px;'>", unsafe_allow_html=True)
+    st.markdown("<div style='text-align:center; margin-top:80px;'>", unsafe_allow_html=True)
     if os.path.exists("logo.png"):
         st.image("logo.png", width=220)
-    else:
-        st.markdown("<h1 style='font-size:60px;'>🌍</h1>", unsafe_allow_html=True)
-    st.markdown("<h1 style='font-size:45px; color:#0E6299;'>Cultura Health</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='color:#6B7280; font-size:18px;'>Culturally intelligent, evidence-based care for newcomers</p>", unsafe_allow_html=True)
+    st.markdown("<h1 style='font-size:45px; color:#0E6299;'>Cultura Health: Bringing Equity and Context to Clinical Care</h1>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
+
+    st.markdown("""
+    ### The Mission
+    Cultura Health exists to bridge the gap between clinical evidence and cultural understanding.  
+    It helps clinicians deliver equitable, culturally aware, and evidence-informed care for newcomers and refugees.  
+
+    Healthcare is at its best when it sees the person behind the patient.  
+    Cultura Health was created to bring empathy and evidence together, helping physicians make confident, informed, and culturally sensitive decisions within minutes.
+
+    ---
+
+    ### The Challenge
+    Every day, primary care physicians meet patients whose health stories began elsewhere.  
+    For newcomers and refugees, medical histories may be incomplete, vaccination records uncertain, and region-specific screening needs unclear.  
+
+    Yet, the relevant guidance — from CMAJ, Public Health Ontario, WHO, and refugee-health frameworks — is scattered across multiple sources.  
+    For a busy clinician, finding and interpreting that information within a short appointment is nearly impossible.  
+
+    The result is inconsistency, missed opportunities for prevention, and inequities in care that should no longer exist in a system striving for inclusivity.
+
+    ---
+
+    ### The Solution: Cultura Health
+    Cultura Health is an evidence-informed, culturally intelligent assistant for clinicians.  
+    It consolidates regional screening guidance, immunization catch-up recommendations, and cultural context into one adaptive tool.  
+
+    In seconds, it can provide the information that would otherwise take hours to gather from various guidelines.  
+    Cultura Health supports physicians with concise, evidence-based insights tailored to a patient’s country of origin, health background, and cultural context.  
+
+    This is not about replacing clinical judgment.  
+    It is about enhancing it — giving clinicians a strong, evidence-based starting point so that every patient encounter begins with understanding.
+
+    ---
+
+    ### Why This Matters
+    **Key Area  |  Supporting Data**  
+    **Newcomer Growth** — Canada welcomes more than 500 000 newcomers every year, many from regions with distinct health needs.  
+    **Screening Gaps** — Research from CMAJ and CCIRH shows that screening and vaccination gaps remain a major barrier to early detection and prevention.  
+    **Clinician Confidence** — A 2023 BMC Family Practice study found >70% of primary-care physicians felt only *somewhat* confident identifying appropriate screening protocols for newcomers from high-prevalence regions.  
+    **Patient Engagement** — PHAC data show culturally adapted care models improve follow-up and engagement by up to 40%.  
+
+    Cultura Health transforms fragmented knowledge into accessible, actionable guidance.  
+    It saves time, reduces variability in care, and helps patients feel seen and understood — not as a diagnosis, but as a person.  
+
+    The goal is not just smarter medicine; it is fairer medicine.
+
+    ---
+
+    ### About the Founder
     
-    st.markdown("<br><br>", unsafe_allow_html=True)
-    if st.button("🚀 Enter", use_container_width=True):
+    **Dr. Haseeb Khaliq**  
+    
+    Over the past decade, I have practiced family medicine across three very different healthcare systems —  
+    the NHS (UK), the Primary Health Care Corporation (Qatar), and now Ontario.  
+
+    In Qatar, I cared for patients from more than fifty nationalities.  
+    Each encounter taught me that culture, migration, language, and belief deeply influence how health is understood and experienced.  
+
+    Now at Restore Medical Clinics in Ottawa, I see the same truth every day:  
+    more than half of my patients are newcomers or refugees.  
+    The need for a trusted resource that connects global evidence to local practice became obvious.  
+
+    Cultura Health was born out of that need — a tool built from the front lines of family practice to make equitable care achievable, practical, and real for every clinician.  
+
+    This project is personal. It grew from years of listening to stories that medicine almost missed.
+    """, unsafe_allow_html=True)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+    if st.button("🚀 Enter App", use_container_width=True):
         st.session_state["started"] = True
         st.rerun()
     st.stop()
-
 # ------------------ Config ------------------
 DATA_PATH  = "AI Newcomer Navigator.xlsx"
 CHAT_MODEL = "gpt-4o-mini"
