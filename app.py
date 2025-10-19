@@ -1,4 +1,4 @@
-# app.py — Cultura AI (MVP+ with RAG, audit, history, reload/re-embed)
+# app.py — Cultura AI (single-page, no sidebar, no force re-embed)
 import os
 from datetime import datetime
 from difflib import get_close_matches
@@ -21,15 +21,18 @@ st.markdown(
     f"""
     <style>
       .block-container {{
-        padding-top: 1.0rem;
+        padding-top: 0.8rem;
         padding-bottom: 2rem;
         max-width: 1100px;
       }}
       h1, h2, h3, h4 {{ color: {PRIMARY}; }}
-      .subtitle {{ color: {MUTED}; font-size: 0.95rem; margin-top: -8px; }}
+      .subtitle {{ color: {MUTED}; font-size: 0.95rem; margin-top: -6px; }}
       .badge {{
         display:inline-block; padding: 4px 8px; border-radius: 10px;
         background: {BG_SOFT}; color: {PRIMARY}; border:1px solid #E5E7EB; font-weight:600;
+      }}
+      .section {{
+        padding: 0.6rem 0.8rem; border: 1px solid #E5E7EB; border-radius: 10px; background: #FFFFFF;
       }}
     </style>
     """,
@@ -44,18 +47,21 @@ EMB_MODEL  = "text-embedding-3-small"
 OPENAI_KEY = os.getenv("OPENAI_API_KEY")
 OPENAI_OK  = bool(OPENAI_KEY)
 
-# ------------------ Sidebar Branding (Cloud-safe) ------------------
-st.sidebar.markdown("### 🌍 Cultura AI")
-if os.path.exists("logo.png"):
-    st.sidebar.image("logo.png", use_column_width=True)
-else:
-    st.sidebar.markdown("<div style='font-size:48px;line-height:1'>🌍</div>", unsafe_allow_html=True)
-st.sidebar.caption("Culturally intelligent, evidence-based care.")
-
-if OPENAI_OK:
-    st.sidebar.success("✅ OpenAI connected")
-else:
-    st.sidebar.warning("⚠️ OPENAI_API_KEY not set — AI features limited")
+# ------------------ Header Branding (main area only) ------------------
+cols = st.columns([1, 4])
+with cols[0]:
+    if os.path.exists("logo.png"):
+        st.image("logo.png", use_column_width=True)
+    else:
+        st.markdown("<div style='font-size:48px;line-height:1'>🌍</div>", unsafe_allow_html=True)
+with cols[1]:
+    st.title("Cultura AI")
+    st.markdown('<div class="subtitle">Global evidence. Local insight. Culturally aware.</div>', unsafe_allow_html=True)
+    if OPENAI_OK:
+        st.success("✅ OpenAI connected")
+    else:
+        st.warning("⚠️ OPENAI_API_KEY not set — AI features limited")
+st.info("Decision support only; always apply clinical judgment and local/provincial guidance.")
 
 # ------------------ Helpers ------------------
 def file_mtime(path: str) -> float:
@@ -118,7 +124,7 @@ def rows_to_docs(df: pd.DataFrame) -> list[dict]:
     return docs
 
 @st.cache_data(show_spinner=False)
-def embed_texts_cached(texts: list[str], excel_mtime: float, salt: int, api_key_ok: bool) -> np.ndarray | None:
+def embed_texts_cached(texts: list[str], excel_mtime: float, api_key_ok: bool) -> np.ndarray | None:
     """Returns normalized embeddings matrix or None on failure."""
     if not api_key_ok or not texts:
         return None
@@ -170,26 +176,14 @@ def must_include_from_text(screening: str, chronic: str) -> list[str]:
         mi.append("For HBV include HBsAg, anti-HBc, +/- anti-HBs; for HCV include anti-HCV +/- RNA.")
     return mi
 
-# ------------------ Header & Controls ------------------
-st.title("Cultura AI")
-st.markdown('<div class="subtitle">Global evidence. Local insight. Culturally aware.</div>', unsafe_allow_html=True)
-st.info("Decision support only - always apply clinical judgment and local/provincial guidance.")
-
-c1, c2, _ = st.columns([1, 1, 5])
-with c1:
+# ------------------ Data Load & Controls ------------------
+top_controls = st.columns([1, 6])
+with top_controls[0]:
     if st.button("🔄 Reload Data"):
         st.cache_data.clear()
         st.toast("Reloading dataset…", icon="🔄")
         st.rerun()
-with c2:
-    # re-embed salt increments to bust embedding cache
-    if "reembed_salt" not in st.session_state:
-        st.session_state["reembed_salt"] = 0
-    if st.button("🧠 Force Re-embed"):
-        st.session_state["reembed_salt"] += 1
-        st.toast("Embeddings will rebuild on next generate.", icon="🧠")
 
-# ------------------ Load Data ------------------
 mtime = file_mtime(DATA_PATH)
 try:
     df = load_data(DATA_PATH, mtime)
@@ -202,30 +196,36 @@ except Exception as e:
 all_countries = list_countries(df)
 country_index = build_country_index(df)
 
-# ------------------ Sidebar Inputs ------------------
-st.sidebar.header("Patient")
-country_pick = st.sidebar.selectbox("Country (from list)", [""] + all_countries, index=0)
-country_free = st.sidebar.text_input("…or type a country")
-country_input = country_free.strip() or country_pick
+# ------------------ Patient Inputs (main screen) ------------------
+st.markdown("### Patient")
+box = st.container()
+with box:
+    c1, c2, c3, c4 = st.columns([2, 1, 1, 1])
+    with c1:
+        country_pick = st.selectbox("Country (from list)", [""] + all_countries, index=0)
+        country_free = st.text_input("…or type a country")
+        country_input = country_free.strip() or country_pick
+        if country_input and country_input not in all_countries:
+            sug = suggest_country(country_input, all_countries)
+            if sug:
+                st.caption(f"Did you mean **{sug}**?")
+    with c2:
+        age = st.number_input("Age", min_value=0, max_value=120, value=35)
+    with c3:
+        sex = st.selectbox("Sex", ["Female", "Male", "Other"])
+    with c4:
+        arrv = st.number_input("Year of Arrival", min_value=1980, max_value=2035, value=2023)
 
-age  = st.sidebar.number_input("Age", min_value=0, max_value=120, value=35)
-sex  = st.sidebar.selectbox("Sex", ["Female", "Male", "Other"])
-arrv = st.sidebar.number_input("Year of Arrival", min_value=1980, max_value=2035, value=2023)
-mode = st.sidebar.radio("Output style", ["Clinician note", "Patient handout", "Both"], index=2)
+    mode = st.radio("Output style", ["Clinician note", "Patient handout", "Both"], index=2, horizontal=True)
 
-if country_input and country_input not in all_countries:
-    sug = suggest_country(country_input, all_countries)
-    if sug:
-        st.sidebar.caption(f"Did you mean **{sug}**?")
-
-# ------------------ Prepare RAG ------------------
+# ------------------ Prepare KB / Embeddings ------------------
 docs = rows_to_docs(df)
 texts = [d["text"] for d in docs]
-salt  = st.session_state.get("reembed_salt", 0)
-X = embed_texts_cached(texts, excel_mtime=mtime, salt=salt, api_key_ok=OPENAI_OK)
+X = embed_texts_cached(texts, excel_mtime=mtime, api_key_ok=OPENAI_OK)
 KB_READY = (X is not None) and OPENAI_OK
 
 # ------------------ Generate ------------------
+st.markdown("### Generate")
 if st.button("✨ Generate Cultura AI Summary", key="generate"):
     row = resolve_row(country_input, df, country_index)
     if row is None:
@@ -299,13 +299,7 @@ Instructions:
 4) Flag red flags or referrals if indicated.
 5) Keep the output succinct (≈250–400 words). {mode_text}
 """
-
-    if mods:
-        user_prompt += "\nAdditional rule-based modifiers to consider:\n- " + "\n- ".join(mods) + "\n"
-    if must:
-        user_prompt += "\nAlways include:\n- " + "\n- ".join(must) + "\n"
-
-    # Fallback summary
+    # Offline fallback
     def offline_summary() -> str:
         out = [
             "**Clinical Summary (Offline Fallback)**",
@@ -348,8 +342,8 @@ Instructions:
     if mods or must: score += 10
     score = min(score, 100)
 
-    # Display
-    st.subheader("🧠 Cultura AI Summary")
+    # Display result
+    st.markdown("### 🧠 Cultura AI Summary")
     st.progress(score / 100.0)
     st.caption(f"Confidence (heuristic): {score}%")
     st.markdown(summary_text)
@@ -379,6 +373,7 @@ Instructions:
         "country": country_input, "age": age, "sex": sex, "arrival": arrv,
         "summary": summary_text, "score": score,
     })
+
     with st.expander("🕘 History (this session)"):
         for i, item in enumerate(reversed(st.session_state["history"]), start=1):
             st.markdown(
@@ -389,38 +384,16 @@ Instructions:
             st.markdown(item["summary"])
             st.divider()
 
-    # Downloads
+    # Download (TXT only)
     st.divider()
     st.caption("📋 Copy or download for your EMR")
     st.text_area("Copy from here:", value=summary_text, height=220, key="copybox")
-
     st.download_button(
         "⬇️ Download summary (.txt)",
         data=summary_text.encode("utf-8"),
         file_name=f"cultura_summary_{country_input}_{age}.txt",
         mime="text/plain",
         key="dl_txt",
-    )
-    st.download_button(
-        "⬇️ Download summary (.md)",
-        data=summary_text.encode("utf-8"),
-        file_name=f"cultura_summary_{country_input}_{age}.md",
-        mime="text/markdown",
-        key="dl_md",
-    )
-    html = f"""
-    <html><body>
-    <h2 style="color:{PRIMARY};">Cultura AI Summary</h2>
-    <p><b>Country:</b> {country_input} &nbsp; <b>Age:</b> {age} &nbsp; <b>Sex:</b> {sex} &nbsp; <b>Arrival:</b> {arrv}</p>
-    <hr/>{summary_text.replace('\n','<br/>')}
-    </body></html>
-    """
-    st.download_button(
-        "⬇️ Download print-friendly HTML",
-        data=html.encode("utf-8"),
-        file_name=f"cultura_summary_{country_input}_{age}.html",
-        mime="text/html",
-        key="dl_html",
     )
 
 # ------------------ Footer ------------------
