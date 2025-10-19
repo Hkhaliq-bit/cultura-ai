@@ -79,11 +79,7 @@ with cols[0]:
 with cols[1]:
     st.title("Cultura Health")
     st.markdown('<div class="subtitle">Global evidence. Local insight. Culturally aware.</div>', unsafe_allow_html=True)
-    if OPENAI_OK:
-        st.success("✅ OpenAI connected")
-    else:
-        st.warning("⚠️ OPENAI_API_KEY not set — AI features limited")
-st.info("Decision support only; always apply clinical judgment and local/provincial guidance.")
+st.info("Decision support only - always apply clinical judgment and local/provincial guidance.")
 
 # ------------------ Helpers ------------------
 def file_mtime(path: str) -> float:
