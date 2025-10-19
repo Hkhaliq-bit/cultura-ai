@@ -46,12 +46,18 @@ if "started" not in st.session_state:
     st.session_state["started"] = False
 
 if not st.session_state["started"]:
-    st.markdown("<div style='text-align:center; margin-top:80px;'>", unsafe_allow_html=True)
+    st.markdown("<div style='text-align:center; margin-top:100px;'>", unsafe_allow_html=True)
+
     if os.path.exists("logo.png"):
-        st.image("logo.png", width=220)
-    st.markdown("<h1 style='font-size:45px; color:#0E6299;'>Cultura Health: Bringing Equity and Context to Clinical Care</h1>", unsafe_allow_html=True)
+        st.image("logo.png", width=260)
+    else:
+        st.markdown("<h1 style='font-size:60px;'>🌍</h1>", unsafe_allow_html=True)
+
+    st.markdown("<h1 style='font-size:45px; color:#0E6299;'>Cultura Health</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='color:#6B7280; font-size:18px;'>Culturally intelligent, evidence-based care for newcomers</p>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
+    # ---- About Section ----
     st.markdown("""
     ### The Mission
     Cultura Health exists to bridge the gap between clinical evidence and cultural understanding. 
@@ -68,7 +74,7 @@ if not st.session_state["started"]:
     Every day, primary care physicians meet patients whose health stories began elsewhere.  
     For newcomers and refugees, medical histories may be incomplete, vaccination records uncertain, and region-specific screening needs unclear.  
 
-    Yet, the relevant guidance - from CMAJ, Public Health Ontario, WHO, and refugee-health frameworks - is scattered across multiple sources.  
+    Yet, the relevant guidance – from CMAJ, Public Health Ontario, WHO, and refugee-health frameworks – is scattered across multiple sources.  
     For a busy clinician, finding and interpreting that information within a short appointment is nearly impossible.  
 
     The result is inconsistency, missed opportunities for prevention, and inequities in care that should no longer exist in a system striving for inclusivity.
@@ -83,19 +89,28 @@ if not st.session_state["started"]:
     Cultura Health supports physicians with concise, evidence-based insights tailored to a patient’s country of origin, health background, and cultural context.  
 
     This is not about replacing clinical judgment.  
-    It is about enhancing it - giving clinicians a strong, evidence-based starting point so that every patient encounter begins with understanding.
+    It is about enhancing it – giving clinicians a strong, evidence-based starting point so that every patient encounter begins with understanding.
 
     ---
-### Why This Matters
 
-Every year, Canada welcomes more than half a million newcomers — each bringing unique health backgrounds, exposures, and needs. Yet studies from *CMAJ* and the Canadian Collaboration for Immigrant and Refugee Health (CCIRH) continue to highlight persistent gaps in screening, immunization, and chronic disease prevention for these populations. 
+    ### Why This Matters
 
-A 2023 *BMC Family Practice* study found that over 70% of family physicians felt only somewhat confident identifying the appropriate screening and vaccination protocols for patients arriving from high-prevalence regions. Meanwhile, data from the Public Health Agency of Canada show that culturally adapted care models can improve patient engagement and follow-up by up to 40%.
+    Every year, Canada welcomes more than half a million newcomers — each bringing unique health backgrounds, exposures, and needs. Yet studies from *CMAJ* and the Canadian Collaboration for Immigrant and Refugee Health (CCIRH) continue to highlight persistent gaps in screening, immunization, and chronic disease prevention for these populations. 
 
-Cultura Health was designed to close these gaps. It brings scattered, complex guidance into one place — transforming it into concise, evidence-based insights that clinicians can trust. By reducing variability in care, saving time, and enhancing confidence, Cultura Health helps physicians deliver medicine that is not only smarter, but also fairer and more human — ensuring every patient feels seen, understood, and cared for as a person, not just a diagnosis.
+    A 2023 *BMC Family Practice* study found that over 70% of family physicians felt only somewhat confident identifying the appropriate screening and vaccination protocols for patients arriving from high-prevalence regions. Meanwhile, data from the Public Health Agency of Canada show that culturally adapted care models can improve patient engagement and follow-up by up to 40%.
 
----
-""", unsafe_allow_html=True)
+    Cultura Health was designed to close these gaps. It brings scattered, complex guidance into one place — transforming it into concise, evidence-based insights that clinicians can trust. By reducing variability in care, saving time, and enhancing confidence, Cultura Health helps physicians deliver medicine that is not only smarter, but also fairer and more human — ensuring every patient feels seen, understood, and cared for as a person, not just a diagnosis.
+
+    ---
+    """, unsafe_allow_html=True)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    if st.button("🚀 Enter", use_container_width=True):
+        st.session_state["started"] = True
+        st.rerun()
+
+    st.stop()
 # ------------------ Config ------------------
 DATA_PATH  = "AI Newcomer Navigator.xlsx"
 CHAT_MODEL = "gpt-4o-mini"
