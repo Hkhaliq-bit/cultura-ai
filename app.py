@@ -95,28 +95,6 @@ if not st.session_state["started"]:
 
     Cultura Health was designed to close these gaps. It brings scattered, complex guidance into one place - transforming it into concise, evidence-based insights that clinicians can trust. By reducing variability in care, saving time, and enhancing confidence, Cultura Health helps physicians deliver medicine that is not only smarter, but also fairer and more human - ensuring every patient feels seen, understood, and cared for as a person, not just a diagnosis.
 
-    ---
-
-    ### About the Founder
-    
-    **Dr. Haseeb Khaliq**  
-    
-    Over the past decade, I have practiced family medicine across three very different healthcare systems - the NHS (UK), the Primary Health Care Corporation (Qatar), and now Ontario.  
-    In Qatar, I cared for patients from more than fifty nationalities. Each encounter taught me that culture, migration, language, and belief deeply influence how health is understood and experienced.  
-    Now at Restore Medical Clinics in Ottawa, I see the same truth every day: more than half of my patients are newcomers or refugees.  
-    
-    The need for a trusted resource that connects global evidence to local practice became obvious.  
-
-    Cultura Health was born out of that need - a tool built from the front lines of family practice to make equitable care achievable, practical, and real for every clinician.  
-
-    This project is personal. It grew from years of listening to stories that medicine almost missed.
-    """, unsafe_allow_html=True)
-
-    st.markdown("<br>", unsafe_allow_html=True)
-    if st.button("🚀 Enter App", use_container_width=True):
-        st.session_state["started"] = True
-        st.rerun()
-    st.stop()
 # ------------------ Config ------------------
 DATA_PATH  = "AI Newcomer Navigator.xlsx"
 CHAT_MODEL = "gpt-4o-mini"
