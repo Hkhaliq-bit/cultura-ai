@@ -1,4 +1,4 @@
-# app.py — Cultura AI (single-page, no sidebar, no force re-embed)
+# app.py — Cultura AI (single-page, no sidebar, proxy-proof OpenAI client)
 import os
 from datetime import datetime
 from difflib import get_close_matches
@@ -8,31 +8,10 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 from openai import OpenAI
+import httpx  # <— used to bypass env proxies
 
 # ------------------ App / Style ------------------
 st.set_page_config(page_title="Cultura AI", page_icon="🌍", layout="wide")
-# --- TEMP DIAGNOSTICS: detect any proxy-related settings (remove later) ---
-bad = []
-if "OPENAI_PROXIES" in os.environ: bad.append("env: OPENAI_PROXIES")
-if "HTTP_PROXY" in os.environ:      bad.append("env: HTTP_PROXY")
-if "HTTPS_PROXY" in os.environ:     bad.append("env: HTTPS_PROXY")
-if "ALL_PROXY" in os.environ:       bad.append("env: ALL_PROXY")
-
-try:
-    # On Streamlit Cloud, st.secrets exists
-    if "proxies" in st.secrets:
-        bad.append("st.secrets['proxies']")
-    # also check nested sections like [openai]
-    for k in ("openai", "client", "settings"):
-        if k in st.secrets and isinstance(st.secrets[k], dict) and "proxies" in st.secrets[k]:
-            bad.append(f"st.secrets['{k}']['proxies']")
-except Exception:
-    pass
-
-if bad:
-    st.error("Proxy-related configuration detected: " + ", ".join(bad) + " — remove these to fix the OpenAI error.")
-# -------------------------------------------------------------------------
-
 logging.basicConfig(level=logging.INFO)
 
 PRIMARY = "#0E6299"
@@ -130,6 +109,15 @@ def suggest_country(name: str, options: list[str]) -> str | None:
     match = get_close_matches(name.strip(), options, n=1, cutoff=0.75)
     return match[0] if match else None
 
+# --- Proxy-proof OpenAI client (ignores env proxies) ---
+def get_openai_client() -> OpenAI | None:
+    """Create an OpenAI client that ignores HTTP(S) proxy env vars."""
+    key = os.getenv("OPENAI_API_KEY")
+    if not key:
+        return None
+    http_client = httpx.Client(trust_env=False, timeout=30.0)  # trust_env=False => ignore HTTP_PROXY, etc.
+    return OpenAI(api_key=key, http_client=http_client)
+
 # RAG docs
 def rows_to_docs(df: pd.DataFrame) -> list[dict]:
     docs: list[dict] = []
@@ -151,7 +139,9 @@ def embed_texts_cached(texts: list[str], excel_mtime: float, api_key_ok: bool) -
     if not api_key_ok or not texts:
         return None
     try:
-        client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        client = get_openai_client()
+        if client is None:
+            return None
         embs: list[list[float]] = []
         B = 64
         for i in range(0, len(texts), B):
@@ -280,11 +270,12 @@ if st.button("✨ Generate Cultura AI Summary", key="generate"):
     top_docs = []
     try:
         if KB_READY:
-            client = OpenAI(api_key=OPENAI_KEY)
-            rq = f"{country_input} {region} age:{age} sex:{sex} arrival:{arrv} screening:{screening} chronic:{chronic} immun:{immun} culture:{culture}"
-            top_docs = semantic_search(rq, docs, X, client, top_k=3)
-            if top_docs:
-                retrieval_context = "\n\n---\n\n".join([d["text"] for d in top_docs])
+            client = get_openai_client()
+            if client:
+                rq = f"{country_input} {region} age:{age} sex:{sex} arrival:{arrv} screening:{screening} chronic:{chronic} immun:{immun} culture:{culture}"
+                top_docs = semantic_search(rq, docs, X, client, top_k=3)
+                if top_docs:
+                    retrieval_context = "\n\n---\n\n".join([d["text"] for d in top_docs])
         elif not OPENAI_OK:
             st.warning("OPENAI_API_KEY not set — semantic retrieval disabled.")
     except Exception as e:
@@ -337,9 +328,11 @@ Instructions:
         ]
         return "\n".join(out)
 
-    # AI call
+    # AI call (proxy-proof)
     try:
-        client = OpenAI(api_key=OPENAI_KEY)
+        client = get_openai_client()
+        if client is None:
+            raise RuntimeError("OPENAI_API_KEY missing")
         with st.spinner("🧠 Generating evidence-based guidance..."):
             resp = client.chat.completions.create(
                 model=CHAT_MODEL,
