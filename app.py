@@ -54,10 +54,12 @@ if not st.session_state["started"]:
 
     st.markdown("""
     ### The Mission
-    Cultura Health exists to bridge the gap between clinical evidence and cultural understanding.  
+    Cultura Health exists to bridge the gap between clinical evidence and cultural understanding. 
+    
     It helps clinicians deliver equitable, culturally aware, and evidence-informed care for newcomers and refugees.  
 
     Healthcare is at its best when it sees the person behind the patient.  
+    
     Cultura Health was created to bring empathy and evidence together, helping physicians make confident, informed, and culturally sensitive decisions within minutes.
 
     ---
@@ -81,7 +83,7 @@ if not st.session_state["started"]:
     Cultura Health supports physicians with concise, evidence-based insights tailored to a patient’s country of origin, health background, and cultural context.  
 
     This is not about replacing clinical judgment.  
-    It is about enhancing it — giving clinicians a strong, evidence-based starting point so that every patient encounter begins with understanding.
+    It is about enhancing it - giving clinicians a strong, evidence-based starting point so that every patient encounter begins with understanding.
 
     ---
 
