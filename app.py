@@ -372,14 +372,6 @@ Instructions:
         if notes:
             st.markdown(f"**Notes:** {notes}")
 
-    # KB snippets
-    if top_docs:
-        with st.expander("🔎 Evidence snippets from knowledge base"):
-            for j, d in enumerate(top_docs, start=1):
-                st.markdown(f"**Snippet {j}**")
-                st.markdown(d["text"])
-                st.divider()
-
     # History
     if "history" not in st.session_state:
         st.session_state["history"] = []
