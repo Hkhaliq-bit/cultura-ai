@@ -11,6 +11,28 @@ from openai import OpenAI
 
 # ------------------ App / Style ------------------
 st.set_page_config(page_title="Cultura AI", page_icon="🌍", layout="wide")
+# --- TEMP DIAGNOSTICS: detect any proxy-related settings (remove later) ---
+bad = []
+if "OPENAI_PROXIES" in os.environ: bad.append("env: OPENAI_PROXIES")
+if "HTTP_PROXY" in os.environ:      bad.append("env: HTTP_PROXY")
+if "HTTPS_PROXY" in os.environ:     bad.append("env: HTTPS_PROXY")
+if "ALL_PROXY" in os.environ:       bad.append("env: ALL_PROXY")
+
+try:
+    # On Streamlit Cloud, st.secrets exists
+    if "proxies" in st.secrets:
+        bad.append("st.secrets['proxies']")
+    # also check nested sections like [openai]
+    for k in ("openai", "client", "settings"):
+        if k in st.secrets and isinstance(st.secrets[k], dict) and "proxies" in st.secrets[k]:
+            bad.append(f"st.secrets['{k}']['proxies']")
+except Exception:
+    pass
+
+if bad:
+    st.error("Proxy-related configuration detected: " + ", ".join(bad) + " — remove these to fix the OpenAI error.")
+# -------------------------------------------------------------------------
+
 logging.basicConfig(level=logging.INFO)
 
 PRIMARY = "#0E6299"
